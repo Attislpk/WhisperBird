@@ -1,0 +1,43 @@
+server:
+  port: 8080
+  #servlet\u7684\u4E0A\u4E0B\u6587\u8DEF\u5F84\uFF0C\u9ED8\u8BA4\u662F/\uFF0C\u6B64\u5904\u624B\u52A8\u8BBE\u7F6E\u8BBF\u95EE\u8DEF\u5F84, \u5982\u679C\u4F7F\u7528\u5916\u7F6E\u7684\u5219\u4E0D\u9700\u8981
+  servlet:
+    context-path: /im_bird_sys
+
+spring:
+  #\u6570\u636E\u6E90\u7684\u76F8\u5173\u914D\u7F6E
+  datasource:
+    name: im_bird_sys
+    #\u91C7\u7528druid\u6570\u636E\u6E90
+    type: com.alibaba.druid.pool.DruidDataSource
+    #\u8FDE\u63A5\u6570\u636E\u5E93\u7684\u76F8\u5173\u8BBE\u7F6E
+    url: jdbc:mysql:///im_bird?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 59420lpk
+
+    #\u6570\u636E\u5E93\u8FDE\u63A5\u6C60\u76D1\u63A7\u8BBE\u7F6E
+    druid:
+      filters: stat
+      initial-size: 2
+      min-idle: 1
+      max-active: 20
+      max-wait: 30000
+      #\u5173\u95ED\u7A7A\u95F2\u8FDE\u63A5\u7684\u76D1\u6D4B\u95F4\u9694
+      time-between-eviction-runs-millis: 30000
+      #\u6570\u636E\u5E93\u8FDE\u63A5\u6C60\u4E2D\u7684\u6700\u77ED\u751F\u5B58\u65F6\u95F4
+      min-evictable-idle-time-millis: 300000
+      #\u5FC3\u8DF3\u68C0\u6D4B
+      validation-query: SELECT 'X'
+      #\u7A7A\u95F2\u65F6\uFF0C\u7A7A\u95F2\u8FDE\u63A5\u56DE\u6536\u5668\u5BF9\u8FDE\u63A5\u8FDB\u884C\u76D1\u6D4B\uFF0C\u5982\u679C\u68C0\u6D4B\u5931\u8D25\u5219\u4ECE\u8FDE\u63A5\u6C60\u4E2D\u53BB\u9664\u8BE5\u8FDE\u63A5
+      test-while-idle: true
+      #\u8FDE\u63A5\u65F6\u4E0D\u5F00\u542F\u6D4B\u8BD5\uFF0C\u5426\u5219\u5F71\u54CD\u6027\u80FD
+      test-on-borrow: true
+
+
+  thymeleaf:
+    prefix: classpath:/templates/pages/
+    cache: false
+
+
+
