@@ -22,6 +22,7 @@
     delete from chat_msg
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="org.wdzl.entity.ChatMsg">
     insert into chat_msg (id, send_user_id, accept_user_id, 
       msg, sign_flag, create_time
@@ -30,6 +31,16 @@
       #{msg,jdbcType=VARCHAR}, #{signFlag,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
       )
   </insert>
+
+  <!--使用collection遍历取出msgList中的msgId，对id下的msg逐个进行遍历签收-->
+  <update id="batchUpdateMsgStatus">
+    update chat_msg set sign_flag = 1 where id in
+    <foreach collection="list" item="item" open="(" separator="," close=")" index="index" >
+      #{item}
+    </foreach>
+  </update>
+
+
   <insert id="insertSelective" parameterType="org.wdzl.entity.ChatMsg">
     insert into chat_msg
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -103,4 +114,9 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="getUnReadMsgList" parameterType="String" resultType="org.wdzl.entity.ChatMsg">
+    SELECT id, send_user_id as sendUserId, accept_user_id as acceptUserId, msg, sign_flag as SignFlag, create_time as createTime
+    FROM chat_msg WHERE accept_user_id = #{acceptId} AND sign_flag = 0;
+  </select>
 </mapper>

@@ -16,6 +16,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </select>
 
+<!--查询两个用户是否已经是好友-->
   <select id="queryIfFriends" parameterType="java.lang.String" resultType="java.lang.Integer">
     select
     count(id)
@@ -28,12 +29,20 @@
     delete from my_friends
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+
   <insert id="insert" parameterType="org.wdzl.entity.MyFriends">
-    insert into my_friends (id, my_user_id, my_friend_user_id
-      )
-    values (#{id,jdbcType=VARCHAR}, #{myUserId,jdbcType=VARCHAR}, #{myFriendUserId,jdbcType=VARCHAR}
-      )
+    insert into my_friends (id, my_user_id, my_friend_user_id)
+    values (#{id,jdbcType=VARCHAR}, #{myUserId,jdbcType=VARCHAR}, #{myFriendUserId,jdbcType=VARCHAR})
   </insert>
+
+<!-- 查询用户好友列表的方法-->
+  <select id="queryFriendsList" parameterType="String" resultType="org.wdzl.vo.MyFriendVo">
+    select
+    u.id as friendUserId, u.username as friendUsername, u.nickname as friendNickname, u.face_image as friendFaceImage
+    from my_friends mf left join users u on mf.my_friend_user_id = u.id
+    where mf.my_user_id = #{myUserId}
+  </select>
+
   <insert id="insertSelective" parameterType="org.wdzl.entity.MyFriends">
     insert into my_friends
     <trim prefix="(" suffix=")" suffixOverrides=",">

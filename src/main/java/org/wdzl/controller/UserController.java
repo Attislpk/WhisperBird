@@ -31,9 +31,6 @@ public class UserController {
     @Autowired
     FastDFSClient fastDFSClient;
 
-    @Autowired
-    FriendsRequestService friendsRequestService;
-
     /**
      * 后端的登录/注册功能的实现
      * 当succes为true时，向前端返回success:true, object:object
@@ -115,103 +112,49 @@ public class UserController {
     }
 
 
-//    @RequestMapping("/uploadFaceBase64")
-//    @ResponseBody
-//    //用户上传头像的方法
-//    public Map<String,Object> uploadFace(UserBo userBo){
-//        Map<String,Object> modelMap = new HashMap<>();
-//        String url = null;
-//        //获取从前端传来的base64的字符串，并将其转为文件对象后再上传
-//        String base64Data = userBo.getFaceData();
-//        String userFacePath = "D:\\"+userBo.getUserId()+"userFaceBase64.png";
-//        try{
-//            //调用FileUtiles中的方法将base64字符串转为文件对象
-//            FileUtils.base64ToFile(userFacePath,base64Data);
-//            MultipartFile multipartFile = FileUtils.fileToMultipart(userFacePath);
-//            //使用fastDFS上传图片，并获取fastDFS上传图片的路径, 此处上传的是裁剪过后的大图
-//            url = fastDFSClient.uploadBase64(multipartFile); //url:http://47.108.24.240:8888/group1/M00/00/00/rBNmaWA6AIKANWilABoSAQkrh48557.png
-//        }catch (Exception e){
-//            modelMap.put("success",false);
-//            modelMap.put("errMsg",e.toString());
-//        }
-//        System.out.println(url);
-//        //创建缩略图的存放路径
-//        //String bigFace = "xxxxxxxx147767419.png" 上传的图片路径
-//        //String thumbFace = "xxxxxxxx147767419_150x150.png"
-//        String thumb = "_150x150.";
-//        String[] arr = url.split("\\.");// \\转义
-//        String thumbImgUrl = arr[0]+thumb+arr[1];
-//        //更新用户信息
-//        User user = new User();
-//        user.setId(userBo.getUserId());
-//        user.setFaceImageBig(url);
-//        user.setFaceImage(thumbImgUrl);
-//        try {
-//            int effectNum = userService.updateByPrimaryKeySelective(user);
-//            if (effectNum == 1){
-//                modelMap.put("success",true);
-//                modelMap.put("data",user);
-//            }else {
-//                modelMap.put("success",false);
-//                modelMap.put("errMsg","图片上传失败！");
-//            }
-//        }catch (Exception e){
-//            modelMap.put("success",false);
-//            modelMap.put("errMsg",e.toString());
-//        }
-//        return modelMap;
-//    }
-
-    /**
-     * 搜索用户名并添加好友的方法
-     */
-    @GetMapping(value = "/searchfriend")
+    @RequestMapping("/uploadFaceBase64")
     @ResponseBody
-    public Map<String,Object> searchFriend(String myUserid, String friendUsername){
+    //用户上传头像的方法
+    public Map<String,Object> uploadFace(UserBo userBo){
         Map<String,Object> modelMap = new HashMap<>();
-        UserVo userVo = new UserVo();
-        /**
-         * 前置条件
-         * 1.搜索用户不存在，返回该用户不存在
-         * 2.搜索账号为自身，返回不能添加自己为好友
-         * 3.搜索的朋友已经是好友，返回该用户已经是你的好友
-         */
-       //在UserService中完成搜索好友的前置接口
-        Integer result = userService.preconditionForFriendSearch(myUserid, friendUsername);
-        if(result == SearchFriendEnum.SUCCESS.getState()){
-            User user = userService.queryByUsername(friendUsername);
-            modelMap.put("success",true);
-            BeanUtils.copyProperties(user,userVo);
-            modelMap.put("data",userVo);
-        }else{
+        String url = null;
+        //获取从前端传来的base64的字符串，并将其转为文件对象后再上传
+        String base64Data = userBo.getFaceData();
+        String userFacePath = "D:\\"+userBo.getUserId()+"userFaceBase64.png";
+        try{
+            //调用FileUtiles中的方法将base64字符串转为文件对象
+            FileUtils.base64ToFile(userFacePath,base64Data);
+            MultipartFile multipartFile = FileUtils.fileToMultipart(userFacePath);
+            //使用fastDFS上传图片，并获取fastDFS上传图片的路径, 此处上传的是裁剪过后的大图
+            url = fastDFSClient.uploadBase64(multipartFile); //url:http://47.108.24.240:8888/group1/M00/00/00/rBNmaWA6AIKANWilABoSAQkrh48557.png
+        }catch (Exception e){
             modelMap.put("success",false);
-            modelMap.put("errMsg",SearchFriendEnum.stateOf(result).getStateInfo());
+            modelMap.put("errMsg",e.toString());
         }
-        return modelMap;
-    }
-
-
-    /**
-     * 发送好友请求的方法
-     */
-    @GetMapping(value = "/addfriend")
-    @ResponseBody
-    public Map<String,Object> addFriend(String myUserid, String friendUsername){
-        //前端页面已经是搜索过后的信息，因此能够保证发送过来的myUserid和friendUsername都是合法有效的
-        Map<String,Object> modelMap = new HashMap<>();
-        //查询该好友请求是否已经在数据库中，如果在库中则不能继续发送请求
-        int result = friendsRequestService.queryFriendRequest(myUserid, friendUsername);
-        if(result == FriendRequestEnum.ALREADY_SENT.getState()){
-            modelMap.put("success",false);
-            modelMap.put("errMsg","好友请求已发送，请勿重复发送");
-        }else{
-            result = friendsRequestService.insertFriendRequest(myUserid, friendUsername);
-            if(result == 1){
+        System.out.println(url);
+        //创建缩略图的存放路径
+        //String bigFace = "xxxxxxxx147767419.png" 上传的图片路径
+        //String thumbFace = "xxxxxxxx147767419_150x150.png"
+        String thumb = "_150x150.";
+        String[] arr = url.split("\\.");// \\转义
+        String thumbImgUrl = arr[0]+thumb+arr[1];
+        //更新用户信息
+        User user = new User();
+        user.setId(userBo.getUserId());
+        user.setFaceImageBig(url);
+        user.setFaceImage(thumbImgUrl);
+        try {
+            int effectNum = userService.updateByPrimaryKeySelective(user);
+            if (effectNum == 1){
                 modelMap.put("success",true);
-            }else{
+                modelMap.put("data",user);
+            }else {
                 modelMap.put("success",false);
-                modelMap.put("errMsg","好友请求发送失败");
+                modelMap.put("errMsg","图片上传失败！");
             }
+        }catch (Exception e){
+            modelMap.put("success",false);
+            modelMap.put("errMsg",e.toString());
         }
         return modelMap;
     }

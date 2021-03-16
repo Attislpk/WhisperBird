@@ -52,10 +52,11 @@ public class UserServiceImpl implements UserService {
         //设置一些默认的非空信息和id
         user.setCid(user.getCid()); //设备id
         user.setId(sid.nextShort());
+        user.setNickname(user.getUsername());
         user.setPassword(MD5Utils.getPwd(user.getPassword()));
         //为每个注册用户生成一个唯一的二维码
         String qrCodePath = "E:\\JAVACODE\\projectdev\\bird"+user.getUsername()+"qrcode.png"; //二维码存储的本地路径
-        qrCodeUtils.createQRCode(qrCodePath,"bird_qrcode"+user.getId()); //二维码的扫描内容
+        qrCodeUtils.createQRCode(qrCodePath,"bird_qrcode:"+user.getUsername()); //二维码的扫描内容
         MultipartFile multipartFile = FileUtils.fileToMultipart(qrCodePath);//将该路径下的文件转换为multipart
         String qrCodeUrl = "";
         try {
@@ -64,7 +65,8 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        user.setFaceImage("");
+        //用户注册时候的默认头像是其二维码
+        user.setFaceImage(qrCodeUrl);
         user.setQrcode(qrCodeUrl);
         user.setFaceImageBig("");
         return userMapper.insert(user);

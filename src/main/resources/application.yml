@@ -1,3 +1,4 @@
+#使用外置的tomcat，war包的方式进行部署
 server:
   port: 8080
   #servlet\u7684\u4E0A\u4E0B\u6587\u8DEF\u5F84\uFF0C\u9ED8\u8BA4\u662F/\uFF0C\u6B64\u5904\u624B\u52A8\u8BBE\u7F6E\u8BBF\u95EE\u8DEF\u5F84, \u5982\u679C\u4F7F\u7528\u5916\u7F6E\u7684\u5219\u4E0D\u9700\u8981
@@ -55,6 +56,6 @@ fdfs:
     width: 150
     height: 150
   tracker-list:            #TrackerList参数,支持多个
-    - 47.108.24.240:22122
-
+#    - 47.108.24.240:22122
+     - 172.19.102.105:22122  #内网的ip和端口号
 

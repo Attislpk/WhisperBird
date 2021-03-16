@@ -4,14 +4,19 @@ import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wdzl.dao.FriendsRequestMapper;
+import org.wdzl.dao.MyFriendsMapper;
 import org.wdzl.dao.UserMapper;
 import org.wdzl.entity.FriendsRequest;
+import org.wdzl.entity.MyFriends;
 import org.wdzl.entity.User;
 import org.wdzl.enums.FriendRequestEnum;
 import org.wdzl.service.FriendsRequestService;
+import org.wdzl.vo.FriendRequestVo;
 
 import javax.enterprise.inject.Alternative;
 import java.util.Date;
+import java.util.List;
+
 @Service
 public class FriendsRequestServiceImpl implements FriendsRequestService {
     @Autowired
@@ -22,6 +27,9 @@ public class FriendsRequestServiceImpl implements FriendsRequestService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    MyFriendsMapper myFriendsMapper;
 
     @Override
     public int insertFriendRequest(String myUserId, String friendUsername) {
@@ -48,4 +56,17 @@ public class FriendsRequestServiceImpl implements FriendsRequestService {
             return FriendRequestEnum.SUCCESS.getState();
         }
     }
+
+    @Override
+    public List<FriendRequestVo> queryFriendsList(String acceptUserId) {
+        //acceptUserId是从前端传来的，能够确保数据是合法的，此处不进行验证
+        return friendsRequestMapper.queryFriendsList(acceptUserId);
+    }
+
+    //删除好友请求的方法
+    @Override
+    public void deleteFriendRequst(FriendsRequest friendsRequest) {
+        friendsRequestMapper.deleteFriendRequst(friendsRequest);
+    }
+
 }

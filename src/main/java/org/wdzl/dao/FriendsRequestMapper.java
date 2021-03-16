@@ -1,6 +1,9 @@
 package org.wdzl.dao;
 
 import org.wdzl.entity.FriendsRequest;
+import org.wdzl.vo.FriendRequestVo;
+
+import java.util.List;
 
 public interface FriendsRequestMapper {
     int deleteByPrimaryKey(String id);
@@ -18,4 +21,9 @@ public interface FriendsRequestMapper {
     int updateByPrimaryKeySelective(FriendsRequest record);
 
     int updateByPrimaryKey(FriendsRequest record);
+
+    List<FriendRequestVo> queryFriendsList(String acceptUserId);
+
+    //删除好友请求的方法
+    void deleteFriendRequst(FriendsRequest friendsRequest);
 }

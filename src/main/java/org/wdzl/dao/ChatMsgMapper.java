@@ -2,6 +2,8 @@ package org.wdzl.dao;
 
 import org.wdzl.entity.ChatMsg;
 
+import java.util.List;
+
 public interface ChatMsgMapper {
     int deleteByPrimaryKey(String id);
 
@@ -14,4 +16,8 @@ public interface ChatMsgMapper {
     int updateByPrimaryKeySelective(ChatMsg record);
 
     int updateByPrimaryKey(ChatMsg record);
+
+    void batchUpdateMsgStatus(List<String> msgList);
+
+    List<ChatMsg> getUnReadMsgList(String acceptId);
 }

@@ -24,7 +24,18 @@
     where send_user_id = #{myUserId,jdbcType=VARCHAR} and accept_user_id = #{friendId,jdbcType=VARCHAR}
   </select>
 
+<!--user表和friendRequest表的联合查询,返回list用于好友申请列表的显示-->
+  <select id="queryFriendsList" parameterType="java.lang.String" resultType="org.wdzl.vo.FriendRequestVo">
+    select
+    u.id as senderId, u.nickname as senderNickname, u.username as senderUsername, u.face_Image as senderFaceImage
+    from friends_request fr left join users u on fr.send_user_id = u.id
+    where fr.accept_user_id = #{acceptUserId}
+  </select>
 
+<!--删除friends_request表中好友请求数据的sql语句-->
+  <delete id="deleteFriendRequst" parameterType="org.wdzl.entity.FriendsRequest">
+    delete from friends_request where send_user_id = #{sendUserId} and accept_user_id = #{acceptUserId}
+  </delete>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from friends_request
